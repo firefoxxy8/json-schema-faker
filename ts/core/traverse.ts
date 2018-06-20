@@ -32,7 +32,13 @@ function traverse(schema: JsonSchema, path: SchemaPath, resolve: Function, rootS
   }
 
   if (typeof schema.generate === 'function') {
-    return utils.typecast(schema, () => schema.generate(rootSchema));
+    var sample = schema.generate(rootSchema);
+
+    if (typeof sample !== 'object') {
+      return utils.typecast(schema, () => sample);
+    }
+
+    schema = sample;
   }
 
   // TODO remove the ugly overcome
