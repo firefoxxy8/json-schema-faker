@@ -1,3 +1,5 @@
+import utils from '../core/utils';
+
 function template(value, schema) {
   if (Array.isArray(value)) {
     return value.map(x => template(x, schema));
@@ -141,7 +143,13 @@ class Container {
           configurable: false,
           enumerable: false,
           writable: false,
-          value: rootSchema => gen.call(context, schema[keys[length]], schema, keys[length], rootSchema),
+          value(rootSchema) {
+            var value = schema[keys[length]];
+            var _schema = utils.merge({}, schema);
+            var _property = keys[length];
+
+            return gen.call(context, value, _schema, _property, rootSchema);
+          },
         });
         break;
       }
